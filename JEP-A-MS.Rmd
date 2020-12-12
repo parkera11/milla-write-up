@@ -1,0 +1,373 @@
+---
+title: "JEP:Applied MS"
+author: "Adam Parker"
+date: "11/12/2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# first check the packages exist, if they don't install (this will require manual typed responses)
+# this is done with a quick little function which is called on the package
+usePackage <- function(p) {
+    if (!is.element(p, installed.packages()[,1]))
+        install.packages(p, dep = TRUE)
+    require(p, character.only = TRUE)
+}
+usePackage('MASS')
+usePackage('lme4')
+usePackage('effects')
+usePackage('dplyr')
+usePackage('tidyr')
+usePackage('BayesFactor')
+usePackage('lmerTest')
+usePackage('ggplot2')
+# let's get R version so it can be printed. [This is written using version 4..0.3]
+r.v <- R.version
+# functions
+#functions
+# centre
+ctr <- function (x) scale(as.numeric(as.character(x)),scale=TRUE)
+```
+
+<center> __Method__ </center>
+
+__Participants__
+
+Forty-five adult participants were recruited from the Bournemouth University Community and provided written informed consent. They had spoken English for a minimum of 10 years, were naïve to the purpose of the study and normal or corrected-to-normal vision. Six participants were excluded from the study. Two were excluded because their level of English did not meet the criteria, four were excluded because of problems in calibration or track loss. Data are reported for the remaining 39 participants (23 females and 16 males) with ages ranging between 18 and 52 (*M* = 23, *SD* = 6.02). Participants read binocularly but only movements of the right eye were recorded – except for three participants whose left eye was recorded due to problems in calibrating the right eye. 
+
+__Materials__
+
+Participants read 20 passages of text and two practice passages specifically written for the purpose of the experiment (see Appendix A). Each passage had five or six lines with four target words. Each passage contained 32 to 48 words (*M*= 40.25). Target words varied from 4 to 14 letters (*M*= 8.69) and had an average Zipf frequency (van Heuven, Mandera, Keuleers, & Brysbart, 2014) based on the SUBTLEX database (Brysbaert & New, 2009) of 2.54. Remaining words in a passage had the average length of 3.96 letters and the average zipf frequency of 5.04. In condition one, the low frequency target word was the last word on a line. In condition two, the low frequency target word was the first word on a line.The passages were identical in both conditions except for one word on the first line of text which was either a short version of a word (e.g. Jeff) in order to place the low frequency target word at the end of the lines or a longer version of the word (e.g. Jeffrey) in order to place the low frequency target word in the beginning of the lines.  An example passage is presented in Figure 1. 
+
+```{r fig1, echo=FALSE, out.width="50%", out.height="25%", fig.cap="Example stimuli with low-frequency words (shown in bolded text) positioned at the start of end of the passage.", fig.align="center"}
+knitr::include_graphics("./plots/fig1-1.png", dpi= 300)
+```
+
+__Apparatus__
+
+SR Research Eyelink 1000 desktop-mounted system with a sampling rate of 1000 Hz was used to track eye movements. Stimuli were presented on a Cambridge Research Systems 32’ Display++ LCD monitor with 1920 x 1080 resolution and with a viewing distance of 80cm. Each character was presented on black 20-point Consolas font. Responses to comprehension questions were recorded via a VPixx five button response box. 
+
+__Procedure__
+
+Participants were tested in a laboratory room at Bournemouth University. The procedure was approved by Bournemouth University Research Ethics Code of Practice in accordance with the Declaration of Helsinki. The participants were first asked to read an information sheet and give written informed consent. Demographic data were recorded at this point. Participants were informed that they would be reading passages for comprehension and answer a comprehension question after each passage (see Appendix B). Comprehension question for example stimuli in Figure 1 was:
+
+*Q*: The scullery would be used to
+
+1) store sporting equipment
+2) store clothes
+3) store cleaning supplies
+
+Participants were instructed to press any button on the response box when they had read the passage and were ready to move forward. They were then instructed to answer the multiple choice questions by pressing the colour on the response button box that responded with the colour of the answer choice they thought was correct. Before completing the reading experiment participants completed a 9 point calibration and validation procedure. The average error of the calibration and validation procedure had to be below 0.40 or the procedure was repeated. For the passages to appear on the screen participants first had to look at a fixation box. Participants were presented with two practice passages and practice comprehension questions before the trial items. Items were presented in a random order. The entire experiment lasted approximately 30 minutes. Participants were debriefed at the end of the experiment.
+
+__Data analysis__
+
+To address our hypotheses, we analysed several standard eye movement measures. Specifically, we examined the effect of our experimental manipulation on total passage reading time *(the time spent reading each passage)*, target word single-fixation duration *(the duration of the first fixation on a word that received only one fixation during first pass reading)*, target word gaze duration *(the sum of all fixation durations on a word during first pass reading)*, and return-sweep fixation durations *(the duration of fixations preceding and following a return-sweep)*. 
+
+Data were analysed using (Generalized) Linear Mixed-effects Models (LMMs) constructed using the *lme4* package (version `r packageVersion('lme4')`; Bates, Maechler, Bolker, & Walker, 2015) in R (version 4.0.3; R Development Core Team, 2020). For each predictor, we report regression coefficients (*b*), standard errors (*SE*), *t*-values, and *p*-values. We used the two-tailed criterion |*t*| > 1.96 for significance, corresponding to a .05 alpha-level. The *z*-values for generalized LMMs are interpreted similarly. To conserve power lost to unnecessary complexity, we used a parsimonious approach to model the random effects structure (Bates, Kliegl, Vasishth, & Baayen, 2018). All numerical variables were centered prior to analysis. For the categorical predictor of condition, we applied summed-to-zero contrasts using the *contr.sum()* function.
+
+```{r short.long, echo= FALSE, include= FALSE}
+short.data <- read.csv("./data/millacharacters.csv", header= TRUE,  na.strings = "na")
+
+short.data$fix.out <- ifelse(short.data$fixduration > 800 | short.data$fixduration < 80, 1, 0)
+```
+
+Prior to analysis, fixations shorter than 80 ms or longer than 800 ms were excluded from the analysis (`r round(nrow(short.data[short.data$fix.out== 1,])/nrow(short.data)*100,2)`% of fixations)– except for fixations which were shorter than 80 ms and within one character of a previous or subsequent fixation. These fixations were combined with the previous or subsequent fixation. 
+
+<center> __Results__ </center>
+
+```{r comp, echo= FALSE, include= FALSE}
+comp <- read.csv("./data/Question Accuracy2.csv", header= TRUE,  na.strings = "na")
+# filter data
+comp <- comp[comp$question ==1,] # must be a question
+comp <- comp[comp$CC != 3,] # select relevant condition
+comp <- comp[comp$item >= 3,] # remove practice
+# reformat
+comp$subject <- factor(comp$subject)
+comp$item <- factor(comp$item)
+comp$correct <- factor(comp$accuracy)
+comp$CC <- factor(comp$CC)
+  levels(comp$CC) <- c("end","start")
+# contrasts
+contrasts(comp$CC) <- contr.sum
+# model
+comp.model = glmer(data = comp, correct ~ CC + 
+                    (1 | subject) + 
+                    (1 + CC | item), family = binomial(link = "logit"))
+comp.sum <- summary(comp.model)
+# summary
+comp.agg <- comp %>% 
+  group_by(CC) %>% 
+  summarise(mean = (mean(accuracy, na.rm= TRUE)*100), 
+            sd = (sd(accuracy, na.rm = TRUE)*100))
+```
+
+On average, comprehension accuracy was `r formatC(comp.agg$mean[1], format='f', digits= 1)`% (*SD*= `r formatC(comp.agg$sd[1], format='f', digits= 2)`%) when target words appeared in a line-final position and `r formatC(comp.agg$mean[2], format='f', digits= 1)`% (*SD*= `r formatC(comp.agg$sd[2], format='f', digits= 2)`%) when they appeared in a line-initial position. A generalized LMM fitted to comprehension accuracy data *(glmer(accuracy~ Condition + (1 | subject) + (1 + Condition | item))* indicated that scores did not differ between presentation conditions, *b*= `r formatC(comp.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(comp.sum$coefficients[2,2], format='f', digits= 3)`, *z*= `r formatC(comp.sum$coefficients[2,3], format='f', digits= 2)`, *p*= `r formatC(comp.sum$coefficients[2,4], format='f', digits= 3)`. 
+
+__Total passage reading time__
+
+```{r TT, echo= FALSE, include= FALSE}
+# read passage time data
+TT.data <- read.csv("./data/Question Accuracy2.csv", header= TRUE,  na.strings = "na")
+# select relevant columns
+TT.data <- TT.data[TT.data$question ==0,] # must not be a question
+TT.data <- TT.data[TT.data$item >= 3,] # not practice
+# recode item
+TT.data$item <- TT.data$item - 2
+# reformat
+TT.data$subject <- factor(TT.data$subject)
+TT.data$item <- factor(TT.data$item)
+TT.data$condition <- factor(TT.data$condition)
+  levels(TT.data$condition) <- c("end","start")
+# contrasts
+contrasts(TT.data$condition) <- contr.sum
+# lookup value
+TT.data$concat <- paste(TT.data$p, TT.data$item, TT.data$condition)
+
+# read word level data
+calc <- read.csv("./data/fixdist_Milla.csv", header= TRUE,  na.strings = "na")
+# get targets
+calc <- calc[calc$target == 1,]
+# code
+calc$subject <- as.factor(calc$subject)
+calc$item <- as.factor(calc$item)
+calc$condition <- factor(calc$condition)
+  levels(calc$condition) <- c("end","start")
+# now word out times for target words
+TTword <- aggregate(TotalTime ~ condition + subject + item, FUN = sum, data = calc)
+# get a lookup value
+TTword$concat <- paste(TTword$subject, TTword$item, TTword$condition)
+# filter 
+TTword <- dplyr::select(TTword, concat, TotalTime)
+
+# merge the two and make a new TT
+TT.data.anal <- merge(TT.data, TTword, by = "concat", all.x = TRUE)
+TT.data.anal$adjustedTT <- TT.data.anal$TT - TT.data.anal$TotalTime
+
+TT.data.model = lmer(data = TT.data.anal, log10(adjustedTT) ~ condition + 
+                     (1 | p) + 
+                     (1 + condition | item))
+tt.sum <- summary(TT.data.model)
+# summary
+tt.agg <- TT.data.anal %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(adjustedTT, na.rm= TRUE), 
+            sd = sd(adjustedTT, na.rm = TRUE))
+
+# bayes factor
+# reove NA
+BF_TT <- TT.data.anal[!is.na(TT.data.anal$adjustedTT),]
+BF_TT <- BF_TT[!is.na(BF_TT$condition),]
+BF_TT <- BF_TT[!is.na(BF_TT$p),]
+BF_TT <- BF_TT[!is.na(BF_TT$item),]
+# create log time
+BF_TT$logTT <- log10(BF_TT$adjustedTT)
+# full model
+bfFull = lmBF(logTT ~ condition + p + item + condition:item, data = BF_TT, 
+              whichRandom=c("p", "item", "condition:item"), iterations = 100000)
+# intercept only
+bfMain = lmBF(logTT ~ p + item, data = BF_TT, 
+              whichRandom=c("p", "item"), iterations = 100000)
+# comparison
+BF_TT_output <- bfFull / bfMain
+
+# plot
+TT.plot <- ggplot(TT.data.anal, aes(x=condition, y=adjustedTT, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Total passage reading time (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00"))
+ggsave(
+  "./plots/TT.plot.png",
+  plot = TT.plot,
+  width = 5.5, height = 5.5,
+  dpi = 300
+)
+```
+
+To examine the influence of our manipulation on global measures, we fit an LMM to total passage reading time. Prior to analysis, we deducted total reading times on target words from the overall passage reading time. As shown in Figure 2, the mean passage reading time was `r formatC(tt.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(tt.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(tt.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(tt.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model fit to log-transformed data *(lmer(log(total time)~ Condition + (1 | subject) + (1 + Condition | item))* indicated that target word position had no influence on passage reading time, *b*= `r formatC(tt.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(tt.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(tt.sum$coefficients[2,4], format='f', digits= 2)`, *p*= `r formatC(tt.sum$coefficients[2,5], format='f', digits= 3)`.
+
+```{r fig2, echo=FALSE, out.width="50%", out.height="50%", fig.cap="Total passage reading time per experimental condition. Total reading times are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/TT.plot.png", dpi= 300)
+```
+
+To evaluate the evidence for the critical null effects, we supplemented our analyses Bayes factor analysis (for a review see Wagenmakers, 2007) using the *lmBF()* function from the *BayesFactor* package (within the R environment (version `r packageVersion('BayesFactor')`; Morey, Rouder, & Jamil, 2015) with 100,000 Monte Carlo iterations. For analysis, we assumed the default Cauchy prior for effect size (see Abbott & Staub, 2015 for discussion). The Bayes factor for the model including condition. when compared against a denominator model that included only random intercepts was `r formatC(extractBF(BF_TT_output)$bf, format='f', digits= 3)`. Based on Jeffrey’s (1961) evidence categories for Bayes factor, this provides extreme evidence in favor of the denominator model that did not our manipulation of target word location. 
+
+__Target word reading times__
+
+```{r word.times, echo= FALSE, include= FALSE}
+word.data <- read.csv("./data/fixdist_Milla.csv", header= TRUE,  na.strings = "na")
+# filter data
+word.data <- word.data[word.data$target == 1,] # select targets
+word.data <- word.data[word.data$AltGazeOutlier == 0,] # remove outliers
+# select those without undersweeps
+valid.data <- word.data[word.data$underline == 0,]
+# format
+valid.data$condition <- factor(valid.data$condition)
+  levels(valid.data$condition) <- c("end","start")
+valid.data$item <- as.factor(valid.data$item)
+valid.data$subject <- as.factor(valid.data$subject)
+# contrasts
+contrasts(valid.data$condition) <- contr.sum
+
+# run gaze model
+gaze.model = lmer(data = valid.data, log10(AltGaze) ~ condition + 
+                       (1 + condition | subject) + 
+                       (1 | item))
+gaze.sum <- summary(gaze.model)
+# summary
+Gaze.agg <- valid.data %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(AltGaze, na.rm= TRUE), 
+            sd = sd(AltGaze, na.rm = TRUE))
+
+# run single model
+single.time <- valid.data[valid.data$single == 1,]
+ff.model = lmer(data = single.time, log10(AltFF) ~ condition + 
+                    (1 + condition | subject) + 
+                    (1 | item))
+single.sum <- summary(ff.model)
+# summary
+Single.agg <- single.time %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(AltFF, na.rm= TRUE), 
+            sd = sd(AltFF, na.rm = TRUE))
+
+# plot
+# single
+single.plot <- ggplot(single.time, aes(x=condition, y=AltFF, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Single-fixation duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00"))+ ylim(0, 1500)
+# gaze
+gaze.plot <- ggplot(valid.data, aes(x=condition, y=AltGaze, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Gaze duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) + ylim(0, 1500)
+# group
+combined <- ggpubr::ggarrange(single.plot, gaze.plot)
+ggsave(
+  "./plots/word.plot.png",
+  plot = combined,
+  width = 11, height = 5.5,
+  dpi = 300
+)
+```
+
+Under-sweep fixations reflect both cases of refixations (59.3%) on and regressions (40.7%) to line-initial words. Therefore, we examined both single-fixation and gaze durations on target words to rule out the possibility that refixations on line-initial words drive potential effects in gaze duration. For both analyses, we removed target words if under-sweep fixations had occurred prior to fixating a line-initial target word (`r formatC((1-(nrow(valid.data)/nrow(word.data)))*100, format= 'f', digits= 1)`% of trials removed).
+
+As shown in Figure 3, the mean single-fixation duration was `r formatC(Single.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(Single.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(Single.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(Single.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model to log-transformed gaze duration *(lmer(dv~ Condition + (1 + Condition | subject) + (1 | item))* indicated that single-fixation durations were significantly longer on line-initial words relative to those line-final words, *b*= `r formatC(single.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(single.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(single.sum$coefficients[2,4], format='f', digits= 2)`, *p*= `r formatC(single.sum$coefficients[2,5], format='f', digits= 3)`. The mean gaze duration was `r formatC(Gaze.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(Gaze.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(Gaze.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(Gaze.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model to log-transformed gaze duration, which included the same model structure as our analysis of single-fixation duration, indicated that gaze durations were significantly longer on line-initial words relative to those line-final words, *b*= `r formatC(gaze.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(gaze.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(gaze.sum$coefficients[2,4], format='f', digits= 2)`, *p*= `r formatC(gaze.sum$coefficients[2,5], format='f', digits= 3)`. Together, these results indicate that line-initial words receive longer fixations even when readers land in a position to promote lexical processing and refixations do not drive longer gaze durations on line-initial words. 
+
+```{r fig3, echo=FALSE, out.width="100%", out.height="50%", fig.cap="Single-fixation and gaze durations per experimental condition. Reading times are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/word.plot.png", dpi= 300)
+```
+
+__Return-sweep fixations__
+
+```{r fixtype, echo= FALSE, include= FALSE}
+fixation_data <- read.csv("./data/millacharacters.csv", header= TRUE,  na.strings = "na")
+#filtering
+fixation_data <- fixation_data[fixation_data$line >= 0,] #all lines
+fixation_data <- fixation_data[fixation_data$currentX >= 1,] #all valid X
+fixation_data <- fixation_data[fixation_data$fixduration >= 80 & fixation_data$fixduration <=800,] #valid fix
+#prep
+fixation_data$subject <- factor(fixation_data$subject)
+fixation_data$item <- factor(fixation_data$item)
+fixation_data$condition <- factor(fixation_data$condition)
+  levels(fixation_data$condition) <- c("end","start")
+fixation_data$allfix <- factor(fixation_data$allfix)
+  levels(fixation_data$allfix) <- c("Intra-line", "Line-final", "Accurate line-initial", "Under-sweep")
+# contrast
+contrasts(fixation_data$condition) <- contr.sum
+
+# plot
+fix.pop.plot <- ggplot(fixation_data, aes(x=condition, y=fixduration, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Fixation duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) + facet_wrap(~allfix)
+ggsave(
+  "./plots/fix.pop.plot.png",
+  plot = fix.pop.plot,
+  width = 11, height = 11,
+  dpi = 300
+)
+
+# run LMM
+# create data frame to print results
+fix.lmm <- data.frame(matrix(ncol = 5, nrow = 4))
+  colnames(fix.lmm) <- c("pop", "b", "se", "t", "p")
+# let's use a for loop to do this quickly
+for (i in 1:4) {
+  # filter the data
+  fix.group <- levels(fixation_data$allfix)[i] # find fix group
+  myrows <- which(fixation_data$allfix==fix.group) # select relevant rows
+  tmp <- data.frame(fixation_data[myrows,]) # write subset of data
+  # set contrasts for each subset
+  contrasts(tmp$condition) <- contr.sum
+  # run the model (intercepts only)
+  model <- lmer(data = tmp, log10(fixduration) ~ condition + (1 | subject) + (1 | item),
+               control=lmerControl(optCtrl=list(maxfun=20000)))
+  summary <- summary(model)
+  # run row counter (to know where to print)
+  myrow <- i
+  # now print
+  fix.lmm$pop[myrow] <- fix.group
+  fix.lmm$b[myrow] <- summary$coefficients[2,1]
+  fix.lmm$se[myrow] <- summary$coefficients[2,2]
+  fix.lmm$t[myrow] <- summary$coefficients[2,4]
+  fix.lmm$p[myrow] <- summary$coefficients[2,5]
+}
+  
+# plot fixduration by amplitude (this only works if running the previous loop [line 326])
+# create outgoing saccade length
+tmp$out.sacc <- abs(tmp$nextX - tmp$currentX)
+# plot
+scatter.amp <- ggplot(data = tmp, mapping = aes(x = out.sacc, y = fixduration)) +
+  geom_jitter(width= .45, aes(color = condition), alpha= .3) +
+  theme_bw(20) + xlim(0, 20) +
+  ylab("Fixation duration (ms)") +
+  xlab("Corrective saccade amplitude (chars)") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00"))
+ggsave(
+  "./plots/scatter.amp.png",
+  plot = scatter.amp,
+  width = 5.5, height = 5.5,
+  dpi = 300
+)
+```
+
+To assess the influence of our manipulation on return-sweep fixation durations, we divided reading fixations into four group: intra-line, line-final, accurate line-initial, and under-sweep. The distribution of fixation durtaions is shown in Figure 4. We then fitted an LMM *(lmer(log fixation duration~ Condition + (1 | subject) + (1 | item)))* to each group of fixations. 
+
+```{r fig4, echo=FALSE, out.width="100%", out.height="100%", fig.cap="Fixation durations for each fixation population: intra-line, line-final, accurate line-inital, and under-sweep. Fixation durations are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/fix.pop.plot.png", dpi= 300)
+```
+
+The analysis of intra-line reading fixations indicated that the effect of our experimental manipulation was not significant, *b*= `r formatC(fix.lmm$b[1], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[1], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[1], format='f', digits= 2)`, *p*= `r formatC(fix.lmm$p[1], format='f', digits= 3)`. The effect of our manipulation was significant for line-final fixations, *b*= `r formatC(fix.lmm$b[2], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[2], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[2], format='f', digits= 2)`, *p*= `r formatC(fix.lmm$p[2], format='f', digits= 3)`, indicating that line-final fixations were longer when low-frequency target words were presented at the end of the line. Conversely, accurate line-initial fixation durations were shorter when target words were at the end of the line, *b*= `r formatC(fix.lmm$b[3], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[3], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[3], format='f', digits= 2)`, *p*= `r formatC(fix.lmm$p[3], format='f', digits= 3)`. Similarly, under-sweep fixation durations were shorter when target words were at the end of the line, , *b*= `r formatC(fix.lmm$b[4], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[4], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[4], format='f', digits= 2)`, *p*= `r formatC(fix.lmm$p[4], format='f', digits= 3)`.
