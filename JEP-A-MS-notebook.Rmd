@@ -1,0 +1,506 @@
+---
+title: What is the optimal position of low-frequency words across line boundaries?
+  An eye movement investigation
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+  html_notebook: default
+---
+
+[Authors]
+
+[Affiliations]
+
+[Correspondence]
+
+\newpage
+
+<center> __Abstract__ </center>
+
+When displaying text on a page or a screen, only a finite number of characters can be presented on a single line. If the text exceeds that finite value, line-breaking (or word/text wrapping) occurs. Often this process results in longer words being positioned at the start of a new line. Given that longer words are typically low-frequency and more difficult to process, we conducted an eye movement experiment to examine how this artifact of text wrapping affects passage reading. This allowed us to answer the question: *should word difficulty be used when determining line breaks?* Thirty-nine participants read 20 passages where low-frequency target words were either line-initial or line-final. There was no statistically reliable effect of our manipulation on passage reading time or comprehension despite several effects at a local level. Regarding our primary research question, there is no evidence to suggest that word difficulty needs to be account for when determining line breaks and when assigning words to new lines of text.
+
+\newpage
+
+It is often assumed that a reader's eyes move continuously along a line of text. However, it is clear from eye movement investigations that readers actually make a series of short, rapid *saccadic* eye movements which are separated by short pauses, called *fixations*. A considerable number of experiments have investigated how various lexical variables influence eye movements during reading (for reviews see Rayner, 1998, 2009). The evidence is clear in indicating that eye movements are under direct lexical contorl and fixation durations are determined by lexical properties of the fixated word, such as its frequency of occurrence in natural language (Inhoff & Rayner, 1986; Kliegl, Grabner, Rolfs, & Engbert, 2004; Slattery, Pollatsek, & Rayner, 2007) and its predictability from the preceding sentence context (Ehrlich & Rayner, 1981; Kliegl et al., 2004; Rayner & Well, 1996; Slattery, Drieghe, Liversedge, & Rayner, 2011). It s also apparent from the eye movement literature that readers obtain useful information from the word to the right of fixation (i.e. those appearing in the parafoveal region extending 2-5 degrees of angle either side of fixation). Studies using the boundary change paradigm (Rayner, 1975) have continually shown that when a word in the parafovea is masked, and readers are denied valid preview, their subsequent reading times on that word are longer (see Schotter, Angele, & Rayner, 2012, for discussion). While a great deal is known about how lexical variables and access to parafoveal information influence reading, comparatively few studies have employed eye movement technology to examine how components of text layout influence reading. In attempt to ameliorate this discrepancy we examined the optimal position for low-frequency words at line boundaries and address the question *should word difficulty be used when determining line breaks?*
+
+Regarding text layout, eye movement studies during reading have examined several areas. Of relevance to the current study are spacing and line boundaries. To date, the published literature has largely been concerned with the effects of spacing at the letter- and word-level (Slattery, 2016). Evidence indicates that spacing between letters facilitates letter identification (Bouma, 1970; Chung, Levi, & Legge, 2001; Erikson & Erikson, 1974; Marzouki, & Grainger, 2014). At the word-level the picture is a little more complex; increases to inter-letter spacing can result in more rapid word identification up until a certain point (Perea & Gomez, 2002) where additional space inhibits the speed of word identification (Paterson & Jordan 2010; Pelli, Tillman, Freeman, Su, Berger, & Majad, 2007; Vinckier, Qiao, Pallier, Dehaene, & Cohen, 2011; Risko, Lanthier, & Besner, 2011). In a comparison of various fonts under several spacing manipulations, Slattery, Yates, and Angele (2016) indicated the optimal inter-letter spacing for isolated word recognition was 30%. Of courses studies of isolated word recognition tell us little about how spacing influences reading behaviour as reading, unlike word identification paradigms, requires careful coordination of the oculomotor system.
+
+It is clear from several studies involving alphabetic languages that reading becomes more difficult when inter-word spaces are removed (Perea & Acha, 2009; Pollatsek & Rayner, 1982; Rayner, Yang, Schuett, & Slattery, 2014; Sheridan, Rayner, & Reingold, 2013, 2016). Thus, inter-word spacing has important implications for reading sentences. Two studies that have investigated joint effects of inter-letter and inter-word spacing indicate that inter-word spacing is likely more important to reading than inter-letter spacing. First, Slattery and Rayner (2013) ad participants read sentences where letter spacing was reduced and added to the end of the word thereby increasing inter-word spacing. These effects were presented in a fixed width font (Consolas) and a proportional font (Georgia). They reported that adjusted spacing led to shorter gaze durations on target words. However, this benefit was limited to the fixed width font. A second study independently manipulated inter-word and inter-letter spacing in a factorial design. Consistent with Rayner and Slattery (2013), Slattery et al. (2016) reported that spacing effects differed between fixed-width and proportional fonts. Increased reading difficulty associated with larger inter-letter and smaller inter-word spacing both tended to be larger for proportional font.
+
+The decision of how spacing should be implemented will not only affect the position of words within a line, it will affect how words are positioned across line boundaries. Line breaking, or word/text wrapping, refers to the process of breaking sections of text into lines so that it will fit the width of the page, screen, or other display area. The first step in breaking a line is determining the width of its characters, taking kerning, ligatures, and spacing into account. The total number of characters to be placed on a line will be determined by taking the width of a line divided by the width of individual characters (Slattery & Rayner, 2013). The next step is determining possible break points (typically white spaces in Latin writing systems). The the total number of characters on a line falls into a region of white space, then determining the line break is straight forward. But what happens when the total number of characters on a line falls intersects a word? There exist a number of different algorithms that determine this based on what is being optimised.
+
+One approach is to minimise raggedness, i.e. to minimise the amount of blank spaces at the end of the line to produce a aesthetically pleasing result. Under this approach, space may be distributed among white space in a line to make characters fit. A second approach is to insert a soft hyphen such that the word spans the line boundary (Bouckaert, 2003). When fitting text to a specific line-width, Microsoft Word uses syllable boundaries to determine automatic hyphenation. Of course not all words are suited to this style of word wrapping. An alternate approach would be to position a word at the start of a new line when it intersects a line break. Based on probability, longer words are more likely to intersect line boundaries and be positioned at the very start of the line. Indeed, Parker and Slattery (2019) reported that line-initial words in the Provo Corpus (Luke & Christianson. 2018) had a higher mean length (6.9 characters) than all words in the corpus combined (4.8 characters). On average, these words also had a lower frequency of occurrence, which is known to be related to the ease of word processing (e.g. Inhoff & Rayner, 1986). This is not surprisingly given the moderate to strong correlations reported in corpus-based analyses between word length and frequency (Kliegl, Nuthmann, & Engbert, 2006; Parker & Slattery, 2019). This means that current approaches to text wrapping may result in words that are more difficult to process being positioned at the very start of the line. At first glance this may not seem like an issue; however, a growing body of evidence examining return-sweep saccades converges on the view that reading is less efficient at the very start of the line. This reduced processing efficiency combined with increased word difficulty may lead to longer reading times; hence our choice to examine the optimal positioning of low-frequency words. For the remainder of the Introduction we summarise the return-sweep literature and consider the implications that positioning low-frequency words at the start of the line could have on reading.
+
+The eye movement that takes a reader's fixation from the end of one line to the start of the next is referred to as a *return-sweep*. Return-sweeps are launched from a position relatively close to the end of a line (5-7 characters; Parker, Nikolova, et al., 2019; Parker, Slattery, & Kirkby, 2019; Slattery & Vasilev, 2019) and follow two distinct trajectories. *Accurate return-sweeps* are those that land in a position that is close enough to their intended target that readers can begin a rightwards reading pass through the new line. *Under-sweeps* are those that land short of their target and require an immediate leftwards saccade towards the left margin prior to the rightwards reading pass. So what differentiates the trajectory of these fixations is the direction of the saccade following the return-sweep. The trajectory of a return-sweep is heavily influenced by typographical factors such as line width, where under-sweeps are more frequent when lines are long (Parker, Nikolova et al., 2019; Parker & Slattery, 2021). As under-sweeps have classically been viewed as univolved in lexical processing, most of the typographical research on return-sweeps has focused on determining the optimal line width for reading which minimises the presence of under-sweep fixations (see Dyson, 2004, for a review). More recently, however, empirical work has investigated the infleunce of line boundaries and return-sweep execution on lexical processing.
+
+*Line-final* fixations are those that precede return-sweeps. Evidence indicates that line-final are shorter than intra-line fixations that are non-adjacent to return-sweeps (Parker, Nikolova, et al., 2019; Parker, Slattery, et al., 2019). Kuperman, Dambacher, Nuthmann, and Kliegl (2010) argued that shorter fixation durations towards the end of the line could stem from the processing of line boundaries, whereby readers engage less in lexical processing in order to plan the return-sweep. Consistent with this, Hofmeister (1997) reported a 20 ms increase in fixation duration for all reading fixations except for line-final fixations, suggesting that line-final fixations are relatively uninvolved in linguistic processing.
+
+*Accurate line-initial* fixations are those resulting from an accurate return-sweep. Accurate line-initial fixations are longer in duration than those occurring within a line (Parker, Nikolova, et al., 2019; Parker, Kirkby, Slattery, 2020; Parker, Slattery, et al., 2019; Parker & Slattery, 2019; Slattery & Vasilev, 2019). Furthermore, Parker, Kirkby, and Slattery (2017) reported that words presented at the very start of the line receive longer reading times compared to the same words occurring within a line (Parker, Kirkby, & Slattery, 2017). It has been argued that longer reading times for words at the start of the line result from a lack of parafoveal preview (Parker, Nikolova, et al., 2019), that is the inability to process words adjacent to fixation such that lexical processing must be conducted under foveal viewing. Despite a lack of parafoveal preview for words at the start of the line, two studies have shown that lexical variables associated with word processing ease influence reading times on line-initial words. First, Parker et al. (2017) reported predictability effects for line-initial words which were larger than those observed midline. This indicates that readers may rely on context to offset the unavailability of parafoveal preview. Second, Parker and Slattery (2019) reported effects of both frequency and predictability for line-initial words. In an analysis of the Provo Corpus, it was reported that frequency effects were larger for words at the start of the line indicating that low-frequency words may be more costly when presented in a line-initial position. 
+
+*Under-sweep* fixations are those which follow return-sweeps that require an additional corrective saccade towards the left margin prior to a rightwards reading pass. While their duration is not related to the lexical qualities of the word they land on (Slattery & Parker, 2019), the word they are targeted to (Parker et al., 2020), or reading skill (Parker & Slattery, 2021), readers are able to extract useful information during these fixations and access parafoveal information from the adjacent word to the left but not the right of fixation (Parker et al., 2020).
+
+As each population of reading fixation are deferentially involved in lexical processing, we see several ways in which the position of low-frequency words across line boundaries could influence reading. When readers fixate words at the very start of a new line, a lack of parafoveal preview demands that lexical processing must be carried out during the line-initial fixation. This results in longer line-initial fixations. If, as observed by Parker and Slattery (2019), lexical effects are stronger at the start of the line, positioning long, low-frequency words at the very start of the line may result in longer reading times when moving between lines. Over multiple lines of text, this has the potential to result in slower passage reading. Placing these long, low-frequency words in a line-final position, however, may not incur such a cost as readers will be able to engage in parafoveal processing prior to direct fixation. Furthermore, if, as argued by Hofmesiter (1997), readers are engaging less in lexical processing then they may also be less impacted by word frequency which may in turn promote quicker passage reading time. Of course, this may have a knock-on effect for reading comprehension. We explored these possibilities in a single eye movement experiment where low-frequency words were placed either at the very end or very start of a line. From an applied perspective, this would enable us to address the question: *should word difficulty be used when determining line breaks?*
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# first check the packages exist, if they don't install (this will require manual typed responses)
+# this is done with a quick little function which is called on the package
+usePackage <- function(p) {
+    if (!is.element(p, installed.packages()[,1]))
+        install.packages(p, dep = TRUE)
+    require(p, character.only = TRUE)
+}
+usePackage('MASS')
+usePackage('lme4')
+usePackage('effects')
+usePackage('dplyr')
+usePackage('tidyr')
+usePackage('BayesFactor')
+usePackage('lmerTest')
+usePackage('ggplot2')
+usePackage('flextable')
+# let's get R version so it can be printed. [This is written using version 4..0.3]
+r.v <- R.version
+# functions
+#functions
+# centre
+ctr <- function (x) scale(as.numeric(as.character(x)),scale=TRUE)
+# print p values
+p.print <- function(x) ifelse(x < .0009, "< .001", paste0("= ", formatC(x, format='f', digits= 3)))
+```
+
+<center> __Method__ </center>
+
+__Participants__
+
+Forty-five adult participants were recruited from the Bournemouth University Community and provided written informed consent. They had spoken English for a minimum of 10 years, were naïve to the purpose of the study and normal or corrected-to-normal vision. Six participants were excluded from the study. Two were excluded because their level of English did not meet the criteria, four were excluded because of problems in calibration or track loss. Data are reported for the remaining 39 participants (23 females and 16 males) with ages ranging between 18 and 52 (*M* = 23.0, *SD* = 6.02). Participants read binocularly but only movements of the right eye were recorded – except for three participants whose left eye was recorded due to problems in calibrating the right eye. 
+
+__Materials__
+
+Participants read 20 passages of text and two practice passages specifically written for the purpose of the experiment (see Appendix A). Each passage had five or six lines with four target words. Each passage contained 32 to 48 words (*M*= 40.25). Target words varied from 4 to 14 letters (*M*= 8.69) and had an average Zipf frequency (van Heuven, Mandera, Keuleers, & Brysbart, 2014) based on the SUBTLEX database (Brysbaert & New, 2009) of 2.54. Remaining words in a passage had the average length of 3.96 letters and the average zipf frequency of 5.04. In condition one, the low frequency target word was the last word on a line. In condition two, the low frequency target word was the first word on a line. The passages were identical in both conditions except for one word on the first line of text which was either a short version of a word (e.g. Jeff) in order to place the low frequency target word at the end of the lines or a longer version of the word (e.g. Jeffrey) in order to place the low frequency target word in the beginning of the lines.  An example passage is presented in Figure 1. 
+
+```{r fig1, echo=FALSE, out.width="50%", out.height="25%", fig.cap="Figure 1. Example stimuli with low-frequency words (shown in bolded text) positioned at the start of end of the passage.", fig.align="center"}
+knitr::include_graphics("./plots/fig1-1.png", dpi= 300)
+```
+
+__Apparatus__
+
+SR Research Eyelink 1000 desktop-mounted system with a sampling rate of 1000 Hz was used to track eye movements. Stimuli were presented on a Cambridge Research Systems 32’ Display++ LCD monitor with 1920 x 1080 resolution and with a viewing distance of 80cm. Each character was presented on black 20-point Consolas font. Responses to comprehension questions were recorded via a VPixx five button response box. 
+
+__Procedure__
+
+Participants were tested in a laboratory room at Bournemouth University. The procedure was approved by Bournemouth University Research Ethics Code of Practice in accordance with the Declaration of Helsinki. The participants were first asked to read an information sheet and give written informed consent. Demographic data were recorded at this point. Participants were informed that they would be reading passages for comprehension and answer a comprehension question after each passage (see Appendix B). Comprehension question for example stimuli in Figure 1 was:
+
+*Q*: The scullery would be used to
+
+1) store sporting equipment
+2) store clothes
+3) store cleaning supplies
+
+Participants were instructed to press any button on the response box when they had read the passage and were ready to move forward. They were then instructed to answer the multiple choice questions by pressing the colour on the response button box that responded with the colour of the answer choice they thought was correct. Before completing the reading experiment participants completed a 9 point calibration and validation procedure. The average error of the calibration and validation procedure had to be below 0.40 or the procedure was repeated. For the passages to appear on the screen participants first had to look at a fixation box. Participants were presented with two practice passages and practice comprehension questions before the trial items. Items were presented in a random order. The entire experiment lasted approximately 30 minutes. Participants were debriefed at the end of the experiment.
+
+__Data analysis__
+
+To examine the effect of our experimental manipulation, we analysed several standard eye movement measures. Specifically, we examined *total passage reading time* (the time spent reading each passage), target word *single-fixation duration* (the duration of the first fixation on a word that received only one fixation during first pass reading), target word *gaze duration* (the sum of all fixation durations on a word during first pass reading), and *return-sweep fixation durations* (the duration of fixations preceding and following a return-sweep).
+
+Data were analysed using (Generalized) Linear Mixed-effects Models (LMMs) constructed using the *lme4* package (version `r packageVersion('lme4')`; Bates, Maechler, Bolker, & Walker, 2015) in R (version `r paste0(version$major,".", version$minor)`; R Development Core Team, 2020). For each predictor, we report regression coefficients (*b*), standard errors (*SE*), *t*-values, and *p*-values. We used the two-tailed criterion |*t*| > 1.96 for significance, corresponding to a .05 alpha-level. The *z*-values for generalized LMMs are interpreted similarly. To conserve power lost to unnecessary complexity, we used a parsimonious approach to model the random effects structure (Bates, Kliegl, Vasishth, & Baayen, 2018). All numerical variables were centered prior to analysis. For the categorical predictor of condition, we applied summed-to-zero contrasts using the *contr.sum()* function.
+
+```{r short.long, echo= FALSE, include= FALSE}
+short.data <- read.csv("./data/millacharacters.csv", header= TRUE,  na.strings = "na")
+
+short.data$fix.out <- ifelse(short.data$fixduration > 800 | short.data$fixduration < 80, 1, 0)
+```
+
+Prior to analysis, fixations shorter than 80 ms or longer than 800 ms were excluded from the analysis (`r round(nrow(short.data[short.data$fix.out== 1,])/nrow(short.data)*100,2)`% of fixations)– except for fixations which were shorter than 80 ms and within one character of a previous or subsequent fixation. These fixations were combined with the previous or subsequent fixation. 
+
+<center> __Results__ </center>
+
+```{r comp, echo= FALSE, include= FALSE}
+comp <- read.csv("./data/Question Accuracy2.csv", header= TRUE,  na.strings = "na")
+# filter data
+comp <- comp[comp$question ==1,] # must be a question
+comp <- comp[comp$CC != 3,] # select relevant condition
+comp <- comp[comp$item >= 3,] # remove practice
+# reformat
+comp$subject <- factor(comp$subject)
+comp$item <- factor(comp$item)
+comp$correct <- factor(comp$accuracy)
+comp$CC <- factor(comp$CC)
+  levels(comp$CC) <- c("end","start")
+# contrasts
+contrasts(comp$CC) <- contr.sum
+# model
+comp.model = glmer(data = comp, correct ~ CC + 
+                    (1 | subject) + 
+                    (1 + CC | item), family = binomial(link = "logit"))
+comp.sum <- summary(comp.model)
+# summary
+comp.agg <- comp %>% 
+  group_by(CC) %>% 
+  summarise(mean = (mean(accuracy, na.rm= TRUE)*100), 
+            sd = (sd(accuracy, na.rm = TRUE)*100))
+```
+
+On average, comprehension accuracy was `r formatC(comp.agg$mean[1], format='f', digits= 1)`% (*SD*= `r formatC(comp.agg$sd[1], format='f', digits= 2)`%) when target words appeared in a line-final position and `r formatC(comp.agg$mean[2], format='f', digits= 1)`% (*SD*= `r formatC(comp.agg$sd[2], format='f', digits= 2)`%) when they appeared in a line-initial position. A generalized LMM fitted to comprehension accuracy data *(glmer(accuracy~ Condition + (1 | subject) + (1 + Condition | item))* indicated that scores did not differ between presentation conditions, *b*= `r formatC(comp.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(comp.sum$coefficients[2,2], format='f', digits= 3)`, *z*= `r formatC(comp.sum$coefficients[2,3], format='f', digits= 2)`, *p*= `r formatC(comp.sum$coefficients[2,4], format='f', digits= 3)`. 
+
+__Total passage reading time__
+
+```{r TT, echo= FALSE, include= FALSE}
+# read passage time data
+TT.data <- read.csv("./data/Question Accuracy2.csv", header= TRUE,  na.strings = "na")
+# select relevant columns
+TT.data <- TT.data[TT.data$question ==0,] # must not be a question
+TT.data <- TT.data[TT.data$item >= 3,] # not practice
+# recode item
+TT.data$item <- TT.data$item - 2
+# reformat
+TT.data$subject <- factor(TT.data$subject)
+TT.data$item <- factor(TT.data$item)
+TT.data$condition <- factor(TT.data$condition)
+  levels(TT.data$condition) <- c("end","start")
+# contrasts
+contrasts(TT.data$condition) <- contr.sum
+# lookup value
+TT.data$concat <- paste(TT.data$p, TT.data$item, TT.data$condition)
+
+# read word level data
+calc <- read.csv("./data/fixdist_Milla.csv", header= TRUE,  na.strings = "na")
+# get targets
+calc <- calc[calc$target == 1,]
+# code
+calc$subject <- as.factor(calc$subject)
+calc$item <- as.factor(calc$item)
+calc$condition <- factor(calc$condition)
+  levels(calc$condition) <- c("end","start")
+# now word out times for target words
+TTword <- aggregate(TotalTime ~ condition + subject + item, FUN = sum, data = calc)
+# get a lookup value
+TTword$concat <- paste(TTword$subject, TTword$item, TTword$condition)
+# filter 
+TTword <- dplyr::select(TTword, concat, TotalTime)
+
+# merge the two and make a new TT
+TT.data.anal <- merge(TT.data, TTword, by = "concat", all.x = TRUE)
+TT.data.anal$adjustedTT <- TT.data.anal$TT - TT.data.anal$TotalTime
+
+TT.data.model = lmer(data = TT.data.anal, log10(adjustedTT) ~ condition + 
+                     (1 | p) + 
+                     (1 + condition | item))
+tt.sum <- summary(TT.data.model)
+# summary
+tt.agg <- TT.data.anal %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(adjustedTT, na.rm= TRUE), 
+            sd = sd(adjustedTT, na.rm = TRUE))
+
+# bayes factor
+# remove NA
+BF_TT <- TT.data.anal[!is.na(TT.data.anal$adjustedTT),]
+BF_TT <- BF_TT[!is.na(BF_TT$condition),]
+BF_TT <- BF_TT[!is.na(BF_TT$p),]
+BF_TT <- BF_TT[!is.na(BF_TT$item),]
+# create log time
+BF_TT$logTT <- log10(BF_TT$adjustedTT)
+# full model
+bfFull = lmBF(logTT ~ condition + p + item + condition:item, data = BF_TT, 
+              whichRandom=c("p", "item", "condition:item"), iterations = 100000)
+# intercept only
+bfMain = lmBF(logTT ~ p + item, data = BF_TT, 
+              whichRandom=c("p", "item"), iterations = 100000)
+# comparison
+BF_TT_output <- bfFull / bfMain
+
+# plot
+TT.plot <- ggplot(TT.data.anal, aes(x=condition, y=adjustedTT, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Total passage reading time (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00"))
+ggsave(
+  "./plots/TT.plot.png",
+  plot = TT.plot,
+  width = 4, height = 6,
+  dpi = 300
+)
+```
+
+To examine the influence of our manipulation on global reading efficiency, we fitted an LMM to total passage reading time. Prior to analysis, we deducted total reading times on target words from the overall passage reading time. As shown in Figure 2, the mean passage reading time was `r formatC(tt.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(tt.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(tt.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(tt.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model fit to log-transformed data *(lmer(log(total time)~ Condition + (1 | subject) + (1 + Condition | item))* indicated that target word position had no influence on passage reading time, *b*= `r formatC(tt.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(tt.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(tt.sum$coefficients[2,4], format='f', digits= 2)`, *p*`r p.print(tt.sum$coefficients[2,5])`.
+
+```{r fig2, echo=FALSE, out.width="50%", out.height="40%", fig.cap="Figure 2. Total passage reading time per experimental condition. Total reading times are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/TT.plot.png", dpi= 300)
+```
+
+To evaluate the evidence for the critical null effects, we supplemented our analyses Bayes factor analysis (for a review see Wagenmakers, 2007) using the *lmBF()* function from the *BayesFactor* package (within the R environment (version `r packageVersion('BayesFactor')`; Morey, Rouder, & Jamil, 2015) with 100,000 Monte Carlo iterations. For analysis, we assumed the default Cauchy prior for effect size (see Abbott & Staub, 2015 for discussion). The Bayes factor for the model including condition. when compared against a denominator model that included only random intercepts was *BF*`r p.print(extractBF(BF_TT_output)$bf)`. Based on Jeffrey’s (1961) evidence categories for Bayes factor, this provides extreme evidence in favor of the denominator model that did not our manipulation of target word location. Thus, it would appear that positioning difficult to process, low-frequency words at either the very start of end of the line did not benefit reading times across the passage.
+
+__Target word reading times__
+
+```{r word.times, echo= FALSE, include= FALSE}
+word.data <- read.csv("./data/fixdist_Milla.csv", header= TRUE,  na.strings = "na")
+# filter data
+word.data <- word.data[word.data$target == 1,] # select targets
+word.data <- word.data[word.data$AltGazeOutlier == 0,] # remove outliers
+# select those without undersweeps
+valid.data <- word.data[word.data$underline == 0,]
+# format
+valid.data$condition <- factor(valid.data$condition)
+  levels(valid.data$condition) <- c("end","start")
+valid.data$item <- as.factor(valid.data$item)
+valid.data$subject <- as.factor(valid.data$subject)
+# contrasts
+contrasts(valid.data$condition) <- contr.sum
+
+# run gaze model
+gaze.model = lmer(data = valid.data, log10(AltGaze) ~ condition + 
+                       (1 + condition | subject) + 
+                       (1 | item))
+gaze.sum <- summary(gaze.model)
+# summary
+Gaze.agg <- valid.data %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(AltGaze, na.rm= TRUE), 
+            sd = sd(AltGaze, na.rm = TRUE))
+
+# run single model
+single.time <- valid.data[valid.data$single == 1,]
+ff.model = lmer(data = single.time, log10(AltFF) ~ condition + 
+                    (1 + condition | subject) + 
+                    (1 | item))
+single.sum <- summary(ff.model)
+# summary
+Single.agg <- single.time %>% 
+  group_by(condition) %>% 
+  summarise(mean = mean(AltFF, na.rm= TRUE), 
+            sd = sd(AltFF, na.rm = TRUE))
+
+# plot
+# single
+single.plot <- ggplot(single.time, aes(x=condition, y=AltFF, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Single-fixation duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00"))+ ylim(0, 1500)
+# gaze
+gaze.plot <- ggplot(valid.data, aes(x=condition, y=AltGaze, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Gaze duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) + ylim(0, 1500)
+# group
+combined <- ggpubr::ggarrange(single.plot, gaze.plot)
+ggsave(
+  "./plots/word.plot.png",
+  plot = combined,
+  width = 8, height = 6,
+  dpi = 300
+)
+```
+
+When examining reading times for target words we calculated dependent measures by excluding under-sweep fixations. Furthermore, we removed cases in which a reader made an under-sweep fixation on an adjacent word prior to fixating line-initial target words (`r formatC((1-(nrow(valid.data)/nrow(word.data)))*100, format= 'f', digits= 1)`% of data points removed).
+
+As shown in Figure 3, the mean single-fixation duration was `r formatC(Single.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(Single.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(Single.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(Single.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model fitted to log-transformed gaze duration *(lmer(dv~ Condition + (1 + Condition | subject) + (1 | item))* indicated that single-fixation durations were significantly longer on line-initial words relative to those line-final words, *b*= `r formatC(single.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(single.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(single.sum$coefficients[2,4], format='f', digits= 2)`, *p*`r p.print(single.sum$coefficients[2,5])`. The mean gaze duration was `r formatC(Gaze.agg$mean[1], format='f', digits= 1)` ms (*SD*= `r formatC(Gaze.agg$sd[1], format='f', digits= 2)` ms) when target words were line-final and `r formatC(Gaze.agg$mean[2], format='f', digits= 1)` ms (*SD*= `r formatC(Gaze.agg$sd[2], format='f', digits= 2)` ms) when line-initial. The model to log-transformed gaze duration, which included the same model structure as our analysis of single-fixation duration, indicated that gaze durations were significantly longer on line-initial words relative to those line-final words, *b*= `r formatC(gaze.sum$coefficients[2,1], format='f', digits= 3)`, *SE*= `r formatC(gaze.sum$coefficients[2,2], format='f', digits= 3)`, *t*= `r formatC(gaze.sum$coefficients[2,4], format='f', digits= 2)`, *p*`r p.print(gaze.sum$coefficients[2,5])`. Together, these results indicate longer processing times for target words at the very start of the line. 
+
+```{r fig3, echo=FALSE, out.width="100%", out.height="40%", fig.cap="Figure 3. Single-fixation and gaze durations per experimental condition. Reading times are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/word.plot.png", dpi= 300)
+```
+
+__Return-sweep fixations__
+
+```{r fixtype, echo= FALSE, include= FALSE}
+fixation_data <- read.csv("./data/millacharacters.csv", header= TRUE,  na.strings = "na")
+#filtering
+fixation_data <- fixation_data[fixation_data$line >= 0,] #all lines
+fixation_data <- fixation_data[fixation_data$currentX >= 1,] #all valid X
+fixation_data <- fixation_data[fixation_data$fixduration >= 80 & fixation_data$fixduration <=800,] #valid fix
+#prep
+fixation_data$subject <- factor(fixation_data$subject)
+fixation_data$item <- factor(fixation_data$item)
+fixation_data$condition <- factor(fixation_data$condition)
+  levels(fixation_data$condition) <- c("end","start")
+fixation_data$allfix <- factor(fixation_data$allfix)
+  levels(fixation_data$allfix) <- c("Intra-line", "Line-final", "Accurate line-initial", "Under-sweep")
+# contrast
+contrasts(fixation_data$condition) <- contr.sum
+
+# plot
+fix.pop.plot <- ggplot(fixation_data, aes(x=condition, y=fixduration, fill= condition)) +
+  geom_violin(trim=FALSE, alpha= .25) +
+  geom_jitter(width= .1, aes(color = condition), alpha= .25) +
+  geom_boxplot(width=0.1, outlier.size=-1) +
+  scale_y_log10() + theme_bw(20) +
+  ylab("Fixation duration (ms)") +
+  xlab(" ") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) + facet_wrap(~allfix)
+ggsave(
+  "./plots/fix.pop.plot.png",
+  plot = fix.pop.plot,
+  width = 8, height = 12,
+  dpi = 300
+)
+
+# run LMM
+# create data frame to print results
+fix.lmm <- data.frame(matrix(ncol = 6, nrow = 4))
+  colnames(fix.lmm) <- c("pop", "b", "se", "t", "p", "bf")
+# let's use a for loop to do this quickly
+for (i in 1:4) {
+  # filter the data
+  fix.group <- levels(fixation_data$allfix)[i] # find fix group
+  myrows <- which(fixation_data$allfix==fix.group) # select relevant rows
+  tmp <- data.frame(fixation_data[myrows,]) # write subset of data
+  # set contrasts for each subset
+  contrasts(tmp$condition) <- contr.sum
+  # run the model (intercepts only)
+  model <- lmer(data = tmp, log10(fixduration) ~ condition + (1 | subject) + (1 | item),
+               control=lmerControl(optCtrl=list(maxfun=20000)))
+  summary <- summary(model)
+  # Bayes factors- will need these for non-signif results but save them all incase
+  tmpBF <- tmp[!is.na(tmp$fixduration),]
+  tmpBF <- tmpBF[!is.na(tmpBF$condition),]
+  tmpBF <- tmpBF[!is.na(tmpBF$subject),]
+  tmpBF <- tmpBF[!is.na(tmpBF$item),]
+  # create log time
+  tmpBF$logfix <- log10(tmpBF$fixduration)
+  # full model
+  bfFull = lmBF(logfix ~ condition + subject + item, data = tmpBF, 
+              whichRandom=c("subject", "item"), iterations = 100000)
+  # intercept only
+  bfMain = lmBF(logfix ~ subject + item, data = tmpBF, 
+              whichRandom=c("subject", "item"), iterations = 100000)
+  # comparison
+  tmpBF_output <- bfFull / bfMain
+  # run row counter (to know where to print)
+  myrow <- i
+  # now print
+  fix.lmm$pop[myrow] <- fix.group
+  fix.lmm$b[myrow] <- summary$coefficients[2,1]
+  fix.lmm$se[myrow] <- summary$coefficients[2,2]
+  fix.lmm$t[myrow] <- summary$coefficients[2,4]
+  fix.lmm$p[myrow] <- summary$coefficients[2,5]
+  fix.lmm$bf[myrow] <- extractBF(tmpBF_output)$bf
+}
+  
+# plot fixduration by amplitude (this only works if running the previous loop [line 326])
+# create outgoing saccade length
+tmp$out.sacc <- abs(tmp$nextX - tmp$currentX)
+# relabel
+tmp$LIrefix <- as.factor(tmp$LIrefix)
+  levels(tmp$LIrefix) <- c("Refixation", "Regression")
+# plot
+scatter.amp <- ggplot(data = tmp, mapping = aes(x = out.sacc, y = fixduration)) +
+  geom_jitter(width= .45, aes(color = condition), alpha= .3) +
+  theme_bw(20) + xlim(0, 20) +
+  ylab("Fixation duration (ms)") +
+  xlab("Corrective saccade amplitude (characters)") +
+  theme(legend.position='top') + theme(legend.title = element_blank()) +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) 
+ggsave(
+  "./plots/scatter.amp.png",
+  plot = scatter.amp,
+  width = 8, height = 6,
+  dpi = 300
+)
+# undersweep type analysis
+#contrasts(tmp$LIrefix) <- contr.sum
+summary.type <- summary(lmer(data= tmp, log(fixduration)~ condition * LIrefix + (1 | subject) + (1 | item)))
+USrefix.cnt <- tmp %>% count(LIrefix, condition)
+# plot
+US.plot.dat <- tmp %>%
+   group_by(LIrefix, condition) %>%
+   summarise(mean.mpg = mean(fixduration, na.rm = TRUE),
+             sd.mpg = sd(fixduration, na.rm = TRUE),
+             n.mpg = n()) %>%
+   mutate(se.mpg = sd.mpg / sqrt(n.mpg),
+          lower.ci.mpg = mean.mpg - qt(1 - (0.05 / 2), n.mpg - 1) * se.mpg,
+          upper.ci.mpg = mean.mpg + qt(1 - (0.05 / 2), n.mpg - 1) * se.mpg)
+# plot dat
+US.plot <- ggplot(US.plot.dat, aes(x=condition, y=mean.mpg, fill=condition)) + 
+  geom_jitter(data=tmp, aes(x=condition, y=fixduration, colour=condition), size=1, width = 0.1)+
+  geom_bar(stat="identity", position=position_dodge(), alpha=.5) +
+  geom_errorbar(aes(ymin=lower.ci.mpg, ymax=upper.ci.mpg), width=.2, position=position_dodge(.9)) + 
+  facet_wrap(~LIrefix) + theme_bw(20) + ylab("Fixation duration (ms)") + xlab(" ") +
+  scale_fill_manual(values=c("#999999", "#E69F00")) +
+  scale_color_manual(values=c("#999999", "#E69F00")) +
+  theme(legend.position='top') + theme(legend.title = element_blank()) 
+ggsave(
+  "./plots/US.plot.png",
+  plot = US.plot,
+  width = 8, height = 6,
+  dpi = 300
+)
+  
+
+
+fix.tab <- data.frame(matrix(NA, 2, 5))
+  colnames(fix.tab) <- c("Condition", "Intra-line", "Line-final", "Accurate line-initial", "Under-sweep")
+fix.tab$Condition[1] <- "End"
+fix.tab$Condition[2] <- "Start"
+
+
+# end
+fix.tab$`Intra-line`[1] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Intra-line" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Intra-line" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Line-final`[1] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Line-final" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Line-final" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Accurate line-initial`[1] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Accurate line-initial" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Accurate line-initial" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Under-sweep`[1] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Under-sweep" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Under-sweep" & fixation_data$condition=="end",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+# start
+fix.tab$`Intra-line`[2] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Intra-line" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Intra-line" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Line-final`[2] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Line-final" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Line-final" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Accurate line-initial`[2] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Accurate line-initial" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Accurate line-initial" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+fix.tab$`Under-sweep`[2] <- paste0(formatC(mean(fixation_data[fixation_data$allfix== "Under-sweep" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=1, format='f'), " (", formatC(sd(fixation_data[fixation_data$allfix== "Under-sweep" & fixation_data$condition=="start",]$fixduration, na.rm= TRUE),digits=2, format='f'), ")")
+
+
+```
+
+To assess the influence of our manipulation on return-sweep fixation durations, we divided reading fixations into four group: intra-line, line-final, accurate line-initial, and under-sweep. The distribution of fixation durations is shown in Figure 4 and their accompanying means are shown in Table 1. We then fitted an LMM *(lmer(log-fixation duration~ Condition + (1 | subject) + (1 | item)))* to each group of fixations. 
+
+```{r fig4, echo=FALSE, out.width="100%", out.height="80%", fig.cap="Figure 4. Fixation durations for each fixation population: intra-line, line-final, accurate line-inital, and under-sweep. Fixation durations are shown in grey for the end of the line condition and in yellow for the start of the line condition. The y-axis is presented on a log scale.", fig.align="center"}
+knitr::include_graphics("./plots/fix.pop.plot.png", dpi= 300)
+```
+
+Table 1. Durations of return-sweep fixations across experimental conditions.
+```{r tab1, echo=FALSE}
+ft <- flextable(fix.tab)
+autofit(ft)
+```
+*Note*. Standard deviations are shown in parentheses.
+
+The analysis of intra-line reading fixations indicated that the effect of our experimental manipulation was not significant, *b*`r p.print(fix.lmm$b[1])`, *SE*= `r formatC(fix.lmm$se[1], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[1], format='f', digits= 2)`, *p*`r p.print(fix.lmm$p[1])`. We supplemented this null finding with Bayes Factor analysis. The Bayes factor for a model including our experimental manipulation was `r formatC(fix.lmm$bf[1], format='f', digits= 3)` when compared to a null model indicating moderate evdience for the null hypothesis. The effect of our manipulation was significant for line-final fixations, *b*= `r formatC(fix.lmm$b[2], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[2], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[2], format='f', digits= 2)`, *p*`r p.print(fix.lmm$p[2])`, indicating that line-final fixations were longer when low-frequency target words were presented at the end of the line. Conversely, accurate line-initial fixation durations were shorter when target words were at the end of the line, *b*= `r formatC(fix.lmm$b[3], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[3], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[3], format='f', digits= 2)`, *p*`r p.print(fix.lmm$p[3])`. Similarly, under-sweep fixation durations were shorter when target words were at the end of the line, , *b*= `r formatC(fix.lmm$b[4], format='f', digits= 3)`, *SE*= `r formatC(fix.lmm$se[4], format='f', digits= 3)`, *t*= `r formatC(fix.lmm$t[4], format='f', digits= 2)`, *p*`r p.print(fix.lmm$p[4])`.
+
+<!--- remove as I'm no sold on the direction: The observation that under-sweep durations were shorter when target words were positioned at the end of the line was unexpected. There is mounting evidence that under-sweeps are not effected by properties of fixated or adjacent words. Then why might we have observed this difference in under-sweep fixation duration across conditions? As target words were typically longer than adjacent words in the current study, it is likely that readers would have fixated the target word initially. In this case, under-sweep fixations would reflect a refixation. By contrast, when target words were line-final, readers will have likely landed in a similar position but required an additional corrective eye movement towards the line-initial word as word length was shorter. This difference in corrective saccade trajectory (refixation vs regression) may have driven the differences reported for under-sweep fixation duration. First, the data indicated that under-sweeps landed in a similar position regardless of condition. They landed (`r round(mean(tmp[tmp$condition=="end",]$currentX, na.rm= TRUE), 1)`-characters from the start of the line when target words were line-final and `r formatC(mean(tmp[tmp$condition=="start",]$currentX, na.rm= TRUE),format='f', digits=1)`-characters from the start of the line when target words were line-initial. Interestingly, `r formatC(USrefix.cnt[1,3]/(USrefix.cnt[1,3]+USrefix.cnt[3,3])*100,format='f', digits=1)`% of under-sweeps in the end of the line condition were refixations, whereas `r formatC(USrefix.cnt[2,3]/(USrefix.cnt[2,3]+USrefix.cnt[4,3])*100,format='f', digits=1)`% of under-sweeps in the start of the line condition were refixations. From Figure 5, it can be gleaned that fixation durations were much longer for refixations in the start of the line condition than for refixations...--->
+
+<!---```{r fig5, echo=FALSE, out.width="50%", out.height="40%", fig.cap="Figure 5. Fixation durations for under-sweeps that were followed by a refixation or regression across experimental conditions. Fixation durations are shown in grey for the end of the line condition and in yellow for the start of the line condition. Error bars represent the 95% confidence interval.", fig.align="center"}
+knitr::include_graphics("./plots/US.plot.png", dpi= 300)
+```--->
+
+<center> __Discussion__ </center>
+
+Text wrapping across line boundaries often results in long, low-frequency words being positioned at the very start of the line. Given that long, low-frequency words typically receive longer reading fixations (see Rayner, 1998, 2009 for a review), it is surprising that no study (to our knowledge) has examined the effect that this procedure has on text reading efficiency. Addressing this in an empirical manner, our study placed low-frequency words either at the very end or the very beginning of a line. We then compared eye movements at both a global- and local-level. Starting with global reading, our manipulation did not influence passage reading times. In fact, Bayesian evidence provided strong evidence for the null hypothesis that reading times do not differ when low-frequency words are positioned at the start or end of a line. Equally important was the observation that comprehension accuracy did not differ between conditions. At the local (word) level, we observed longer reading times on line-initial target words. Finally, regarding each specific population of return-sweep fixations, we reported that line-final fixations were longer when the low-frequency target word occurred in a line-final position. In contrast, line-initial fixations (both accurate and under-sweep) were longer when the target word was line-initial. Below we consider the implications of our findings. 
+
+Positioning of words within a line of text is by no means a simple task. It will involve taking into account factors such as line length, spacing, kerning, and ligatures. Once words are positioned within a line of text, line breaking or word/text wrapping occurs. Often this will result in long, low-frequency words being positioned at the very start of the line (Parker & Slattery, 2019). Coupled with reduced reading efficiency for line-initial words (e.g. Parker et al., 2017), this may cause disruption to reading at the passage level. Thus, we considered the implications of word positioning for low-frequency words in the current eye movement experiment in order to address the question *should word difficulty be used when determining line breaks?* Our data quite clearly indicates that the positioning of low-frequency, difficult to process words in a line-final or line-initial position does not have detrimental effects on passage reading. In fact, passage reading time and comprehension scores were not reliably different across experimental conditions. It may, therefore, be concluded that word difficulty does not require consideration when assigning words to a new align. That said, we would like to acknowledge that reading times were `r formatC(abs(tt.agg$mean[1]-tt.agg$mean[2]), format='f', digits= 1)` ms longer when target words were line-initial. If we assume that this difference reflects a disruption in processing that accumulates across multiple lines, then it is entirely possible that this difference would increase if passages were longer and additional low-frequency words were line-initial.
+
+While our experimental manipulation had no statistically reliable effect on global reading, we observed several reliable differences at the local level. First, single-fixation and gaze durations were longer when target words were presented in a line-initial position. Like Parker, Kirkby, and Slattery (2017) we believe the most parsimonious explanation for this observation is a lack of parafoveal preview. That is, readers benefit from preprocessing line-final words prior to direct fixation-- something they cannot do for line-initial words. 
+
+We also observed an effect of our experimental manipulation on return-sweep fixations. Line-final fixations have continually been reported to be shorter than intra-line reading fixations (Parker, Nikolova, et al., 2019; Parker, Slattery, et al., 2019 [more citations]). It has been argued that this reflects reduced lexical processing during line-final fixations while readers prioritize olocumotor programming (Kuperman et al., 2010). Consistent with this suggestion, Hofmeister (1997) reported that text degradation did not affect line-final fixation duration. If these fixations are uninvolved in lexical processing, then line-final fixations should be uninfluenced by word level properties. The fact that we report longer line-final fixation durations when low-frequency targets are positioned at the end of the line is at odds with such a claim. Instead, it suggests that differences in word-level properties do influence line-final reading fixations. It may, therefore, be time to abandon the claim that line-final fixations are uninvolved in lexical processing. Instead, the reduction in duration for line-final fixations may stem from a number of other sources: (1) line-final fixations are not impacted by processing difficulty stemming from upcoming words (due to mislocated fixations, parafoveal-on-foveal effects, etc.); (2) reduced lateral visual masking for line-final words; (3) a reduction in skipping costs during line-final fixations. It will be down to future studies to determine the extent to which each of these sources contribute to shorter line-final fixations through carefully crafted novel experimentation.
+
+Regarding line-initial fixations, the data suggest that line-initial fixation durations were longer when target words were line-initial. Across the two conditions, accurate line-initial fixations will have been on a higher frequency word when target words occurred at the end of the line. Thus, we can assume any difference likely reflects a frequnecy effect. However, it is important to not that this may have also reflected some other component such as word length given that this was not controlled in the current study. The most striking finding regarding return-sweep fixation durations is the observation that under-sweeps were longer when target words were positioned at the very start of the line. Evidence has indicated that under-sweeps do not vary with lexical properties of the fixated word (Slattery & Parker, 2019), words adjacent to fixation (Parker, Kirkby, Slattery, 2020), or reading skill (Parker & Slattery, 2021). Then why might we see that our experimental manipulation influenced under-sweep durations? It is possible that differences in lexical properties across conditions may have resulting in this pattern of results. However, such an explanation would be difficult to reconcile with previous null findings. Instead, it may be that when targets are line-initial, readers land on target words and require an additional corrective saccade to reach a more optimal position for processing. By contrast, when target words are at the end of the line, readers will land in a similar position but will fixate the second or third word on a line. As such, they will rapidly initiate a corrective saccade towards a new word (i.e. make an inter-word regression). It could be that white spaces between words causes readers to more rapidly execute this corrective saccade than in cases where they have already landed on the line-initial word. 
+
+In conclusion, through a single eye movement experiment we examined whether word difficulty (i.e. lexical frequency) should be taken into account when determining line breaks. This was acomplished by examining the eye movements of readers as they read passages where low-frequency target words were line-final or line-initial. We found no significant differences in passage reading times across experimental conditions, indicating that processing difficulty does not need to be accounted for when assigning words to a new line of text.
